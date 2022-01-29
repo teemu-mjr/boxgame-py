@@ -1,11 +1,12 @@
 from modules.Animator import Animator
+from modules.Collitions import Collitions
 from modules.GameObject import GameObject
 from modules.Platform import Platform
 
 
 class Player(GameObject):
-    def __init__(self, transform: tuple, sprite, animator: Animator = 0, has_collitions: bool = False, name="GameObject"):
-        super().__init__(transform, sprite, animator, has_collitions, name)
+    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collitions: Collitions = 0, name="GameObject"):
+        super().__init__(transform, sprite, animator, collitions, name)
 
         self.speed = 10
         self.jump_count = 0
@@ -35,8 +36,8 @@ class Player(GameObject):
 
     def fall(self):
         # Check for Platforms
-        if(len(self.collition_list) > 0 and self.fall_time > 5):
-            for obj in self.collition_list:
+        if(len(self.collitions.collition_list) > 0 and self.fall_time > 5):
+            for obj in self.collitions.collition_list:
                 if type(obj) == Platform:
                     self.jump_count = obj.power
                     # obj.delete()

@@ -3,6 +3,7 @@ import sys
 from random import randint
 from modules.Animator import Animator
 from modules.Background import Background
+from modules.Collitions import Collitions
 
 from modules.GameObject import game_obj
 from modules.Player import Player
@@ -21,13 +22,11 @@ pygame.display.set_caption("Jumper")
 # Creating the player
 player_sprite = [
     pygame.image.load("sprites/player.png").convert_alpha(),
-    pygame.image.load("sprites/player.png").convert_alpha()
 ]
 player_sprite[0] = pygame.transform.scale(player_sprite[0], (50, 80))
-player_sprite[1] = pygame.transform.scale(player_sprite[0], (100, 80))
 
 player = Player((screen_width / 2, screen_height / 2),
-                player_sprite, Animator(True, len(player_sprite), 1, 100), True, "Player")
+                player_sprite, Animator(True, len(player_sprite), 1, 100), Collitions(player_sprite, False), "Player")
 
 # Platforms
 platform_interval = 10
@@ -46,7 +45,8 @@ platform_sprite = [
 
 
 def spawn_platform(posX: int = 0):
-    Platform((randint(0, screen_width), posX), platform_sprite, 10, True)
+    Platform((randint(0, screen_width), posX), platform_sprite,
+             10, False, Collitions(platform_sprite, False))
 
 
 def spawn_starting_platforms():
@@ -101,7 +101,7 @@ while running:
 
     # Registering player collitions
     for obj in game_obj["platform"]:
-        player.at_collition(obj)
+        player.collitions.at_collition(obj)
 
     # Rendering all textobject
     for obj in text_obj:
