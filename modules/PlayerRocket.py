@@ -1,12 +1,12 @@
 from modules.Animator import Animator
 from modules.Collisions import Collisions
 from modules.Player import Player
-from modules.Platform import Platform
+from modules.PlatformJump import PlatformJump
 
 
 class PlayerRocket(Player):
-    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collitions: Collisions = 0, name="GameObject"):
-        super().__init__(transform, sprite, animator, collitions, name)
+    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, name="GameObject"):
+        super().__init__(transform, sprite, animator, collisions, name)
         self.speed = 15
         self.jump_count = 0
         self.fall_time = 0
@@ -37,7 +37,6 @@ class PlayerRocket(Player):
         self.fall_time += 1
 
     def check_for_platform(self):
-        if(len(self.collitions.collition_list) > 0 and self.fall_time > 5):
-            for obj in self.collitions.collition_list:
-                if type(obj) == Platform:
-                    self.jump_count = obj.power
+        obj = self.collisions.check_collisions(self)
+        if(type(obj) == PlatformJump and self.fall_time > 5):
+            self.jump_count = obj.power

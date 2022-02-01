@@ -13,10 +13,10 @@ game_obj = {
 
 
 class GameObject:
-    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collitions: Collisions = 0, name="GameObject"):
+    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, name="GameObject"):
         self.transform = transform
         self.animator = animator
-        self.collitions = collitions
+        self.collisions = collisions
         self.sprite = sprite
         self.sprite_index = 0
 
@@ -37,10 +37,9 @@ class GameObject:
         # Rendering the image
         screen.blit(self.sprite[self.sprite_index], sprite_transform)
 
-        # If the object has Collitions move them with the object
-        if type(self.collitions) == Collisions:
-            self.collitions.move(sprite_transform)
-            self.collitions.draw(screen)
+        # If the object has collisions move them with the object
+        if type(self.collisions) == Collisions:
+            self.collisions.move(sprite_transform)
 
         # Idle animations
         if type(self.animator) == Animator:

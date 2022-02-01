@@ -8,7 +8,7 @@ from modules.Background import Background
 from modules.Collisions import Collisions
 from modules.GameObject import game_obj
 from modules.Player import Player
-from modules.Platform import Platform
+from modules.PlatformJump import PlatformJump
 from modules.PlayerRocket import PlayerRocket
 from modules.Score import ScoreText
 from modules.Text import text_obj
@@ -49,8 +49,8 @@ platform_sprite = [
 
 
 def spawn_platform(posX: int = 0):
-    Platform((randint(0, screen_width), posX), platform_sprite,
-             10, False, Collisions(platform_sprite, False))
+    PlatformJump((randint(0, screen_width), posX), platform_sprite,
+                 10, False, Collisions(platform_sprite, False))
 
 
 def spawn_starting_platforms():
@@ -72,10 +72,12 @@ background_bottom_sprite = [
 background_bottom = Background(
     (screen_width/2, screen_height - background_bottom_sprite[0].get_height() / 2), background_bottom_sprite)
 
+
 running = True
 while running:
     # Setting games bg color
     screen.fill((0, 0, 0))
+    player.collisions.collide_with = game_obj["platform"]
 
     # Events
     for event in pygame.event.get():
@@ -95,10 +97,6 @@ while running:
     for list in game_obj:
         for obj in game_obj[list]:
             obj.render(screen)
-
-    # Registering player collitions
-    for obj in game_obj["platform"]:
-        player.collitions.at_collition(obj)
 
     # Rendering all textobject
     for obj in text_obj:
