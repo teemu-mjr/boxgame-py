@@ -6,15 +6,13 @@ from modules.Player import Player
 
 
 class PlayerCube(Player):
-    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collitions: Collisions = 0, name="GameObject"):
-        super().__init__(transform, sprite, animator, collitions, name)
+    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, name="GameObject"):
+        super().__init__(transform, sprite, animator, collisions, name)
 
     def after_render(self, screen):
         self.jump()
 
-        collition_obj = self.collisions.check_collisions(self)
-
-        if (type(collition_obj) == Platform and self.collisions.check_collisions(self).name != "roof"):
+        if (type(self.collisions.check_collisions(self)) == Platform):
             self.velocity = (0, 0)
 
         else:
