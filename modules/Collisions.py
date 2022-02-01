@@ -2,7 +2,7 @@ from pygame import Rect
 import pygame
 
 
-class Collitions:
+class Collisions:
     def __init__(self, sprite, draw_hitbox: bool = False, hitbox_color: type = (0, 255, 0)):
         self.sprite = sprite
         self.draw_hitbox = draw_hitbox
@@ -12,7 +12,7 @@ class Collitions:
         self.collition_list = []
 
     def move(self, transform: tuple):
-        # Move hitbox to objects position
+        # Move hitbox to given position
         self.hitbox.left = transform[0]
         self.hitbox.top = transform[1]
 
@@ -32,3 +32,10 @@ class Collitions:
 
         if (self.hitbox.colliderect(collided_obj.collitions.hitbox)):
             self.collition_list.append(collided_obj)
+
+    def is_colliding_with_type(self, obj_type):
+        for obj in self.collition_list:
+            if (type(obj) == obj_type):
+                return True
+
+        return False

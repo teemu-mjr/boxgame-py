@@ -1,15 +1,19 @@
 import pygame
 import sys
 from random import randint
+
+# Importing all used modules from Modules folder
 from modules.Animator import Animator
 from modules.Background import Background
-from modules.Collitions import Collitions
-
+from modules.Collisions import Collisions
 from modules.GameObject import game_obj
 from modules.Player import Player
 from modules.Platform import Platform
+from modules.PlayerRocket import PlayerRocket
 from modules.Score import ScoreText
-from modules.Text import Text, text_obj
+from modules.Text import text_obj
+
+# Initializing pygame
 pygame.init()
 
 # Screen setup
@@ -25,8 +29,8 @@ player_sprite = [
 ]
 player_sprite[0] = pygame.transform.scale(player_sprite[0], (50, 80))
 
-player = Player((screen_width / 2, screen_height / 2),
-                player_sprite, Animator(True, len(player_sprite), 1, 100), Collitions(player_sprite, False), "Player")
+player = PlayerRocket((screen_width / 2, screen_height / 2),
+                      player_sprite, Animator(True, len(player_sprite), 1, 100), Collisions(player_sprite, False), "Player")
 
 # Platforms
 platform_interval = 10
@@ -46,7 +50,7 @@ platform_sprite = [
 
 def spawn_platform(posX: int = 0):
     Platform((randint(0, screen_width), posX), platform_sprite,
-             10, False, Collitions(platform_sprite, False))
+             10, False, Collisions(platform_sprite, False))
 
 
 def spawn_starting_platforms():
@@ -59,13 +63,6 @@ spawn_starting_platforms()
 # Score
 score_font = pygame.font.SysFont('chalkduster.ttf', 72)
 score = ScoreText((screen_width/2, 50), score_font, "", (255, 255, 255))
-
-# Background
-# background_top_sprite = pygame.image.load(
-#     "sprites/background_top.png").convert()
-
-# background_top = Background(
-#     (screen_width / 2, screen_height), background_top_sprite, True)
 
 background_bottom_sprite = [
     pygame.image.load(

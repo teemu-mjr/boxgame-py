@@ -1,5 +1,6 @@
+import pygame
 from modules.Animator import Animator
-from modules.Collitions import Collitions
+from modules.Collisions import Collisions
 
 # GameObjects
 game_obj = {
@@ -12,7 +13,7 @@ game_obj = {
 
 
 class GameObject:
-    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collitions: Collitions = 0, name="GameObject"):
+    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collitions: Collisions = 0, name="GameObject"):
         self.transform = transform
         self.animator = animator
         self.collitions = collitions
@@ -36,7 +37,8 @@ class GameObject:
         # Rendering the image
         screen.blit(self.sprite[self.sprite_index], sprite_transform)
 
-        if type(self.collitions) == Collitions:
+        # If the object has Collitions move them with the object
+        if type(self.collitions) == Collisions:
             self.collitions.move(sprite_transform)
             self.collitions.check_collitions()
             self.collitions.draw(screen)
