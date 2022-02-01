@@ -19,12 +19,12 @@ class Player(GameObject):
         if(self.jump_count <= 0):
             return
 
-        self.move((0, -1), self.jump_count + 10)
+        self.move((0, -1), self.jump_count * 4)
         self.jump_count -= 1
 
-    def gravity(self, direction: object, acceleration: tuple):
+    def gravity(self, direction: tuple, acceleration: tuple):
         self.velocity = (
-            (self.velocity[0] + acceleration[0]),
-            (self.velocity[1] + acceleration[1])
+            ((self.velocity[0] + acceleration[0]) * direction[0]),
+            ((self.velocity[1] + acceleration[1]) * direction[1])
         )
         self.move(self.velocity)

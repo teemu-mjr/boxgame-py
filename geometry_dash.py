@@ -22,17 +22,21 @@ pygame.display.set_caption("Game Name")
 player_sprite = [
     pygame.image.load("sprites/platform.png").convert_alpha()
 ]
-player_sprite[0] = pygame.transform.scale(player_sprite[0], (30, 30))
+player_sprite[0] = pygame.transform.scale(player_sprite[0], (300, 30))
 
 player = PlayerCube((screen_width / 2, screen_height / 2),
-                    player_sprite, 0, Collisions(player_sprite, True), "Player")
+                    player_sprite, 0, Collisions(player_sprite), "Player")
+
 
 # Platforms to jump over
-platform = pygame.rect.Rect(0, 0, 300, 50)
-Platform((400, 400), player_sprite, 0, 0, Collisions(player_sprite, True))
+platform = Platform((300, 400), player_sprite, 0, 0,
+                    Collisions(player_sprite))
+
+player.collitions.collide_with = [platform]
 
 # Main loop
 running = True
+jump_cooldown = 0
 while running:
     # Setting games bg color
     screen.fill((0, 0, 0))
@@ -46,12 +50,9 @@ while running:
     # Player inputs
     keys = pygame.key.get_pressed()
 
-    if keys[pygame.K_SPACE]:
-        player.jump_count = 2
-
-    # Registering player collitions
-    for obj in game_obj["platform"]:
-        player.collitions.at_collition(obj)
+    if keys[pygame.K_SPACE] and jump_cooldown <= 0:
+        jump_cooldown = 30
+        player.jump_count = 10
 
     # Rendering all gameobjects from GameObject modules list game_obj
     for list in game_obj:
@@ -62,8 +63,12 @@ while running:
     for obj in text_obj:
         obj.render(screen)
 
+    # Timer for now...
+    if(jump_cooldown > 0):
+        jump_cooldown -= 1
+
     # Updating whole display
     pygame.display.update()
 
     # Capping FPS
-    pygame.time.Clock().tick(60)
+    pygame.time.Clock().tick(100)

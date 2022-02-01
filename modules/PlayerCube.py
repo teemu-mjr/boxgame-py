@@ -12,8 +12,8 @@ class PlayerCube(Player):
     def after_render(self, screen):
         self.jump()
 
-        if(not self.collitions.is_colliding_with_type(Platform)):
-            self.gravity((0, 1), (0, 2))
+        if (type(self.collitions.check_collitions(self)) == Platform):
+            self.velocity = (0, 0)
 
         else:
-            self.velocity = (0, 0)
+            self.gravity((0, 1), (0, 0.5))

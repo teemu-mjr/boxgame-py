@@ -40,7 +40,6 @@ class GameObject:
         # If the object has Collitions move them with the object
         if type(self.collitions) == Collisions:
             self.collitions.move(sprite_transform)
-            self.collitions.check_collitions()
             self.collitions.draw(screen)
 
         # Idle animations
@@ -49,10 +48,16 @@ class GameObject:
 
         self.after_render(screen)
 
-    def move(self, input: tuple, speed: float = 1):
+    def move(self, direction: tuple, speed: float = 1):
         self.transform = (
-            self.transform[0] + (input[0] * speed),
-            self.transform[1] + (input[1] * speed),
+            self.transform[0] + (direction[0] * speed),
+            self.transform[1] + (direction[1] * speed),
+        )
+
+    def transform_self(self, value: tuple):
+        self.transform = (
+            (self.transform[0] + (value[0])),
+            (self.transform[1] + (value[1])),
         )
 
     def after_render(self, screen):

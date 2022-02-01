@@ -9,7 +9,7 @@ class Collisions:
         self.hitbox = Rect(0, 0, self.sprite[0].get_width(),
                            self.sprite[0].get_height())
         self.hitbox_color = hitbox_color
-        self.collition_list = []
+        self.collide_with = []
 
     def move(self, transform: tuple):
         # Move hitbox to given position
@@ -20,22 +20,15 @@ class Collisions:
         if (screen != 0 and self.draw_hitbox):
             pygame.draw.rect(screen, self.hitbox_color, self.hitbox, 4)
 
-    def check_collitions(self):
-        for obj in self.collition_list:
-            if not self.hitbox.colliderect(obj.collitions.hitbox):
-                self.collition_list.remove(obj)
-
-    def at_collition(self, collided_obj):
-        for obj in self.collition_list:
-            if obj == collided_obj:
-                return
-
-        if (self.hitbox.colliderect(collided_obj.collitions.hitbox)):
-            self.collition_list.append(collided_obj)
-
-    def is_colliding_with_type(self, obj_type):
-        for obj in self.collition_list:
-            if (type(obj) == obj_type):
-                return True
+    def check_collitions(self, object_checking_for_collitions):
+        for obj in self.collide_with:
+            if (self.hitbox.bottom >= obj.collitions.hitbox.top and self.hitbox.left <= obj.collitions.hitbox.right and self.hitbox.right >= obj.collitions.hitbox.left and self.hitbox.top <= obj.collitions.hitbox.bottom):
+                self.move_out_of_object(obj, object_checking_for_collitions)
+                return obj
 
         return False
+
+    def move_out_of_object(self, obj, object_checking_for_collitions):
+        if (self.hitbox.bottom > obj.collitions.hitbox.top):
+            object_checking_for_collitions.transform_self(
+                (0, obj.collitions.hitbox.top - self.hitbox.bottom))
