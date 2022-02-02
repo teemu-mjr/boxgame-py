@@ -9,23 +9,34 @@ game_obj = {
     "score": [],
     "game_objects": [],
     "player": [],
+    "death": [],
 }
 
 
 class GameObject:
-    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, name="GameObject"):
+    def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, use_gravity: bool = False, name="GameObject"):
         self.transform = transform
         self.animator = animator
         self.collisions = collisions
         self.sprite = sprite
-        self.sprite_index = 0
-
+        self.use_gravity = use_gravity
         self.name = name
+
+        self.sprite_index = 0
+        self.velocity = (0, 0)
 
     def append_to_list(self, key: str):
         game_obj[key].append(self)
 
     def render(self, screen):
+        # Applying the objects velocity
+        if(self.velocity != (0, 0)):
+            self.move(self.velocity, 1)
+
+        # Applying gravity
+        if(self.use_gravity == True):
+            self.gravity((0, 1), (0, 1))
+
         # Getting the center of the image
         sprite_transform = (
             self.transform[0] -
@@ -41,11 +52,17 @@ class GameObject:
         if type(self.collisions) == Collisions:
             self.collisions.move(sprite_transform)
 
-        # Idle animations
+        # Run animations
         if type(self.animator) == Animator:
             self.sprite_index = self.animator.run()
 
         self.after_render(screen)
+
+    def gravity(self, direction: tuple, acceleration: tuple):
+        self.velocity = (
+            ((self.velocity[0] + acceleration[0]) * direction[0]),
+            ((self.velocity[1] + acceleration[1]) * direction[1])
+        )
 
     def move(self, direction: tuple, speed: float = 1):
         self.transform = (

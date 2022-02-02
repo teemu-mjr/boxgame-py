@@ -13,7 +13,7 @@ class Collisions:
 
     def add_to_collide_with_list(self, items_to_add):
         for obj in items_to_add:
-            if(obj.collisions != 0):
+            if(obj.collisions != 0 and obj not in self.collide_with):
                 self.collide_with.append(obj)
 
     def move(self, transform: tuple):
@@ -26,33 +26,29 @@ class Collisions:
             pygame.draw.rect(screen, self.hitbox_color, self.hitbox, 4)
 
     def check_collisions(self, object_checking):
+        collision_list = []
         for obj in self.collide_with:
             if (self.hitbox.bottom >= obj.collisions.hitbox.top and self.hitbox.left <= obj.collisions.hitbox.right and self.hitbox.right >= obj.collisions.hitbox.left and self.hitbox.top <= obj.collisions.hitbox.bottom):
+                # Check if player is inside of the object
                 self.move_out_of_object(obj, object_checking)
-                return obj
 
-        return False
+                # Append the object to collision list
+                collision_list.append(obj)
+
+        # Return the list of all collitions
+        return collision_list
 
     def move_out_of_object(self, obj, object_checking):
         # FROM TOP OR BOTTOM
         if(abs(obj.collisions.hitbox.top - self.hitbox.bottom) < abs(obj.collisions.hitbox.bottom - self.hitbox.top)):
             # TOP
-            object_checking.transform_self(
-                (0, obj.collisions.hitbox.top - self.hitbox.bottom))
+            if (self.hitbox.bottom - 2 > obj.collisions.hitbox.top and self.hitbox.left < obj.collisions.hitbox.right and self.hitbox.right > obj.collisions.hitbox.left and self.hitbox.top < obj.collisions.hitbox.bottom):
+                # Move out of the object
+                object_checking.transform_self(
+                    (0, obj.collisions.hitbox.top - self.hitbox.bottom - 5))
         else:
             # BOTTOM
-            object_checking.transform_self(
-                (0, obj.collisions.hitbox.bottom - self.hitbox.top))
-
-        # FROM LEFT OR RIGHT
-        if(abs(obj.collisions.hitbox.left - self.hitbox.right) < abs(obj.collisions.hitbox.right - self.hitbox.left)):
-            # LEFT
-            print("left")
-#            object_checking.transform_self(
-#                (obj.collisions.hitbox.left - self.hitbox.right, 0))
-
-        else:
-            # RIGHT
-            print("right")
-#            object_checking.transform_self(
-#                (obj.collisions.hitbox.right - self.hitbox.left, 0))
+            if (self.hitbox.bottom > obj.collisions.hitbox.top and self.hitbox.left < obj.collisions.hitbox.right and self.hitbox.right > obj.collisions.hitbox.left and self.hitbox.top < obj.collisions.hitbox.bottom - 2):
+                # Move out of the object
+                object_checking.transform_self(
+                    (0, obj.collisions.hitbox.bottom - self.hitbox.top - 5))
