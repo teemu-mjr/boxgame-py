@@ -9,6 +9,7 @@ class Player(GameObject):
     def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, use_gravity: bool = False, name="Player"):
         super().__init__(transform, sprite, animator, collisions, use_gravity, name)
         self.jump_count = 0
+        self.is_alive = True
 
         self.append_to_list("player")
 
@@ -25,4 +26,5 @@ class Player(GameObject):
         )
 
     def die(self):
+        self.is_alive = False
         GameEvent.rase_event(GameEvent.GameEvents.player_died)

@@ -42,15 +42,14 @@ class GameObject:
             self.transform[0] -
             (self.sprite[self.sprite_index].get_width() / 2),
             self.transform[1] -
-            (self.sprite[self.sprite_index].get_height() / 2)
-        )
-
-        # Rendering the image
-        screen.blit(self.sprite[self.sprite_index], sprite_transform)
+            (self.sprite[self.sprite_index].get_height() / 2))
 
         # If the object has collisions move them with the object
         if type(self.collisions) == Collisions:
             self.collisions.move(sprite_transform)
+
+        # Rendering the image
+        screen.blit(self.sprite[self.sprite_index], sprite_transform)
 
         # Run animations
         if type(self.animator) == Animator:
@@ -75,6 +74,16 @@ class GameObject:
             (self.transform[0] + (value[0])),
             (self.transform[1] + (value[1])),
         )
+
+    # def check_if_out_of_bounds(self):
+    #     # BOTTOM LEFT X
+    #     if(self.bound_area[0][0] > self.collisions.hitbox.bottomleft[0]):
+    #         self.transform_self(
+    #             (self.bound_area[0][0] - self.collisions.hitbox.bottomleft[0], 0))
+    #     # BOTTOM LEFT Y
+    #     if(self.bound_area[0][1] < self.collisions.hitbox.bottomleft[1]):
+    #         self.transform_self(
+    #             (0, self.bound_area[0][1] - self.collisions.hitbox.bottomleft[1]))
 
     def after_render(self, screen):
         pass
