@@ -1,13 +1,15 @@
-from random import randint
 import pygame
 import sys
+from random import randint
 # Importing used modules from Modules folder
 from modules.Collisions import Collisions
 from modules.GameEvent import GameEvents
+from modules.GameText import GameText
 from modules.PlayerCube import PlayerCube
 from modules.Platform import Platform
 from modules.IntervalTimer import IntervalTimer
 from modules.GameObject import game_obj
+from modules.GameText import text_obj
 
 # DEVELOPING/TESTING
 from fps_meter import display_fps
@@ -23,6 +25,7 @@ def render_hitboxes(screen):
 # Initializing pygame
 pygame.init()
 clock = pygame.time.Clock()
+font = pygame.font.SysFont("Arial", 24)
 
 # Screen setup
 screen_width = 800
@@ -30,25 +33,18 @@ screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Game Name")
 
-# Creating the player
+# Game sprites
+
 player_sprite = [
     pygame.image.load("sprites/platform.png").convert_alpha()
 ]
 player_sprite[0] = pygame.transform.scale(player_sprite[0], (50, 50))
-
-player = PlayerCube((100, screen_height - 220),
-                    player_sprite, 0, Collisions(player_sprite, (0, 5, 0, -5)), True, "Player")
-
-# Platforms
 
 main_platform_sprite = [
     pygame.image.load("sprites/platform.png").convert_alpha()
 ]
 main_platform_sprite[0] = pygame.transform.scale(
     main_platform_sprite[0], (screen_width * 2, 150))
-
-main_platform = Platform((screen_width, screen_height - 75),
-                         main_platform_sprite, 0, Collisions(main_platform_sprite), name="Floor")
 
 platform_sprite = [
     pygame.image.load("sprites/platform.png").convert_alpha()
@@ -60,6 +56,8 @@ spike_sprite = [
 ]
 spike_sprite[0] = pygame.transform.scale(spike_sprite[0], (25, 50))
 
+
+# Platforms
 
 class ObstaclePreset:
     def __init__(self, platforms: list, spikes: list, interval: int):
@@ -134,14 +132,52 @@ def spawn_obstacle(index):
 
 
 # Timers
-jump_timer = IntervalTimer(60)
 obstacle_timer = IntervalTimer(0)
 
-# Main loop
+# Main loop booleans
 running = True
 in_menu = True
-playing = True
+playing = False
+
+# Game functions
+
+
+def clear_screen():
+    for list in game_obj:
+        for obj in game_obj[list]:
+            del obj
+
+
+def find_object_by_name(name: str):
+    for list in game_obj:
+        for obj in game_obj[list]:
+            if obj.name == name:
+                return obj
+    return False
+
+
+def create_player():
+    PlayerCube((100, screen_height - 220),
+               player_sprite, 0, Collisions(player_sprite, (0, 5, 0, -5)), True, name="Player")
+
+
+def create_main_platform():
+    Platform((screen_width, screen_height - 75),
+             main_platform_sprite, 0, Collisions(main_platform_sprite), name="Floor")
+
+
+def start_game():
+    create_main_platform()
+    create_player()
+
+
+def stop_game():
+    clear_screen()
+
+
 while running:
+    print(playing)
+
     # Setting games bg color
     screen.fill((0, 0, 0))
 
@@ -150,8 +186,19 @@ while running:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         if event.type == GameEvents.player_died:
+            stop_game()
+            in_menu = True
             playing = False
+
+        # Menu events
+        if in_menu:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    start_game()
+                    in_menu = False
+                    playing = True
 
     # Rendering all gameobjects from GameObject modules list game_obj
     for list in game_obj:
@@ -159,7 +206,11 @@ while running:
             obj.render(screen)
 
 ####################################################################################
+
     if playing:
+        # Find player
+        player = find_object_by_name("Player")
+
         # Player inputs
         keys = pygame.key.get_pressed()
 
@@ -177,17 +228,29 @@ while running:
             if(platform.name != "Floor"):
                 platform.move((-1, 0), 4)
 
-        # Adding possibly new platforms to player collide list
-        player.collisions.add_to_collide_with_list(game_obj["platform"])
-        player.collisions.add_to_collide_with_list(game_obj["death"])
-
         # Spawn obstacles
         if(obstacle_timer.do_action(pygame.time.get_ticks())):
-            obstacle_timer.interval = spawn_obstacle(randint(0, len(presets)))
+            obstacle_timer.interval = spawn_obstacle(
+                randint(0, len(presets) - 1))
+
+        # Render GameText (game)
+        for txt in text_obj["game"]:
+            txt.render(screen)
+
+        # Update platforms to player collide list
+        player.collisions.add_to_collide_with_list(game_obj["platform"])
 
         # DEBUG/DEVELOP MODE
         render_hitboxes(screen)
         display_fps(screen, clock)
+
+####################################################################################
+
+    if in_menu:
+        # Render GameText (menu)
+        for txt in text_obj["menu"]:
+            txt.render(screen)
+
 ####################################################################################
 
     # Updating whole display

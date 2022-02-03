@@ -1,15 +1,18 @@
-text_obj = []
+text_obj = {
+    "menu": [],
+    "game": []
+}
 
 
-class Text:
-    def __init__(self, transform: tuple, font, text: str, color_rgb: tuple):
+class GameText:
+    def __init__(self, transform: tuple, font, text: str, color_rgb: tuple, tag: str):
         self.transform = transform
         self.font = font
         self.text = text
         self.color_rgb = color_rgb
         self.sprite = self.font.render(self.text, True, self.color_rgb)
 
-        text_obj.append(self)
+        text_obj[tag].append(self)
 
     def render(self, screen):
         # Getting the center of the text

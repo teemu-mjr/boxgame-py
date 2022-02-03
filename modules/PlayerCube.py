@@ -10,22 +10,27 @@ class PlayerCube(Player):
         self.is_grounded = False
 
     def after_render(self, screen):
-        collition_list = self.collisions.check_collisions()
+        collision_list = self.collisions.check_collisions()
         self.jump()
 
-        if(self.is_grounded and len(collition_list) <= 0):
+        # No collisions
+        if len(collision_list) <= 0:
             self.is_grounded = False
 
-        elif(self.is_grounded == False and len(collition_list) > 0):
-            self.is_grounded = True
+        # Collision
+        for coll in collision_list:
+            # Check if colliding from bottom
+            if((0, 1) in coll.directions):
+                self.is_grounded = True
+            else:
+                self.is_grounded = False
 
-        for obj in collition_list:
-            if (obj.name == "Spike"):
+            if (coll.obj.name == "Spike"):
                 self.die()
 
-            if (type(obj) == Platform and obj.name != "roof"):
+            if (self.is_grounded):
                 self.velocity = (self.velocity[0], 0)
 
-        if(self.is_alive):
-            # Check if player is inside of the object
-            self.collisions.move_out_of_object(collition_list, self)
+            # # If player is alive check if player is inside of the object
+            if(self.is_alive):
+                self.collisions.register(coll, self)

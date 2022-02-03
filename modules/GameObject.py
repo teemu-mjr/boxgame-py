@@ -6,10 +6,7 @@ from modules.Collisions import Collisions
 game_obj = {
     "background": [],
     "platform": [],
-    "score": [],
-    "game_objects": [],
     "player": [],
-    "death": [],
 }
 
 
@@ -24,6 +21,7 @@ class GameObject:
 
         self.sprite_index = 0
         self.velocity = (0, 0)
+        self.key = 0
 
     def append_to_list(self, key: str):
         game_obj[key].append(self)
@@ -74,16 +72,6 @@ class GameObject:
             (self.transform[0] + (value[0])),
             (self.transform[1] + (value[1])),
         )
-
-    # def check_if_out_of_bounds(self):
-    #     # BOTTOM LEFT X
-    #     if(self.bound_area[0][0] > self.collisions.hitbox.bottomleft[0]):
-    #         self.transform_self(
-    #             (self.bound_area[0][0] - self.collisions.hitbox.bottomleft[0], 0))
-    #     # BOTTOM LEFT Y
-    #     if(self.bound_area[0][1] < self.collisions.hitbox.bottomleft[1]):
-    #         self.transform_self(
-    #             (0, self.bound_area[0][1] - self.collisions.hitbox.bottomleft[1]))
 
     def after_render(self, screen):
         pass
