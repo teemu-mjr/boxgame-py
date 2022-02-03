@@ -1,13 +1,13 @@
+from modules.Animator import Animator
+from modules.Collisions import Collisions
 from modules.GameObject import GameObject
 
 
 class Background(GameObject):
-    def __init__(self, transform: tuple, sprite, moving: bool = False, has_collitions: bool = False, name="GameObject"):
-        super().__init__(transform, sprite, has_collitions, name)
+    def __init__(self, transform: tuple, sprite, moving: bool = False, animator: Animator = 0, collisions: Collisions = 0, use_gravity: bool = False, name="GameObject"):
+        super().__init__(transform, sprite, animator, collisions, use_gravity, name)
 
         self.moving = moving
-
-        self.append_to_list("background")
 
     def after_render(self, screen):
         if (not self.moving):

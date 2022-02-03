@@ -11,8 +11,6 @@ class Player(GameObject):
         self.jump_count = 0
         self.is_alive = True
 
-        self.append_to_list("player")
-
     def after_render(self, screen):
         pass
 

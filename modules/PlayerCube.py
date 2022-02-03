@@ -10,6 +10,9 @@ class PlayerCube(Player):
         self.is_grounded = False
 
     def after_render(self, screen):
+        if(self.transform[0] < 0):
+            self.die()
+
         collision_list = self.collisions.check_collisions()
         self.jump()
 

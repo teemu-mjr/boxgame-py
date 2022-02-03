@@ -2,13 +2,6 @@ import pygame
 from modules.Animator import Animator
 from modules.Collisions import Collisions
 
-# GameObjects
-game_obj = {
-    "background": [],
-    "platform": [],
-    "player": [],
-}
-
 
 class GameObject:
     def __init__(self, transform: tuple, sprite, animator: Animator = 0, collisions: Collisions = 0, use_gravity: bool = False, name="GameObject"):
@@ -22,9 +15,6 @@ class GameObject:
         self.sprite_index = 0
         self.velocity = (0, 0)
         self.key = 0
-
-    def append_to_list(self, key: str):
-        game_obj[key].append(self)
 
     def render(self, screen):
         # Applying the objects velocity
@@ -76,8 +66,8 @@ class GameObject:
     def after_render(self, screen):
         pass
 
-    def delete(self):
-        for list in game_obj:
-            if(self in game_obj[list]):
-                game_obj[list].remove(self)
-                return
+    # def delete(self):
+    #     for list in game_obj:
+    #         if(self in game_obj[list]):
+    #             game_obj[list].remove(self)
+    #             return
