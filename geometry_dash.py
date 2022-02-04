@@ -1,7 +1,6 @@
 import pygame
 import sys
 from random import randint
-from modules.Background import Background
 # Importing used modules from Modules folder
 from modules.Collisions import Collisions
 from modules.GameEvent import GameEvents
@@ -9,15 +8,18 @@ from modules.GameText import GameText
 from modules.PlayerCube import PlayerCube
 from modules.Platform import Platform
 from modules.IntervalTimer import IntervalTimer
+from modules.Background import Background
 
 # DEVELOPING/TESTING
 from fps_meter import display_fps
+from modules.ScoreText import ScoreText
 
 
 # Initializing pygame
 pygame.init()
 clock = pygame.time.Clock()
-font = pygame.font.SysFont("Arial", 24)
+font_24 = pygame.font.SysFont("Arial", 24)
+font_54_b = pygame.font.SysFont("Arial", 54, True)
 
 # Screen setup
 screen_width = 800
@@ -34,6 +36,7 @@ game_obj = {
 }
 
 text_obj = {
+    "all": [],
     "menu": [],
     "game": []
 }
@@ -50,7 +53,7 @@ main_platform_sprite = [
     pygame.image.load("sprites/crate2.png").convert_alpha()
 ]
 main_platform_sprite[0] = pygame.transform.scale(
-    main_platform_sprite[0], (screen_width * 2, 150))
+    main_platform_sprite[0], (screen_width, 150))
 
 platform_sprite = [
     pygame.image.load("sprites/crate2.png").convert_alpha()
@@ -77,6 +80,10 @@ text_back = [
 text_back[0] = pygame.transform.scale(text_back[0], (300, 100))
 text_back[0].set_alpha(150)
 
+# Sounds
+bg_music = pygame.mixer.music.load("music/bg_music.mp3")
+
+pygame.mixer.music.set_volume(0.10)
 
 # Platforms
 
@@ -208,6 +215,18 @@ def clear_screen():
     if len(game_obj["player"]) > 0:
         while len(game_obj["player"]) > 0:
             game_obj["player"].pop(0)
+    # Txt(game)
+    if len(text_obj["game"]) > 0:
+        while len(text_obj["game"]) > 0:
+            text_obj["game"].pop(0)
+    # Txt(menu)
+    if len(text_obj["menu"]) > 0:
+        while len(text_obj["menu"]) > 0:
+            text_obj["menu"].pop(0)
+    # Txt(all)
+    if len(text_obj["all"]) > 0:
+        while len(text_obj["all"]) > 0:
+            text_obj["all"].pop(0)
 
 
 def find_object_by_name(name: str):
@@ -227,7 +246,7 @@ def create_player():
 
 def create_main_platform():
     game_obj["platform"].append(
-        Platform((screen_width, screen_height - 75),
+        Platform((screen_width / 2, screen_height - 75),
                  main_platform_sprite, 0, Collisions(main_platform_sprite), name="Floor")
     )
 
@@ -238,11 +257,29 @@ def create_background():
     )
 
 
+def create_menu():
+    create_background()
+    text_obj["menu"].append(
+        Background((screen_width / 2, 200), text_back))
+
+    text_obj["menu"].append(
+        GameText((screen_width / 2, 200), font_24, "Press ENTER to Start!", (200, 150, 0)))
+
+
+def create_score_text():
+    score_text = ScoreText(
+        (screen_width/2, screen_height - 50), font_54_b, "0", (20, 230, 20))
+    text_obj["all"].append(score_text)
+
+    return score_text
+
+
 def start_game():
     clear_screen()
     create_main_platform()
     create_player()
     create_background()
+    return create_score_text()
 
 
 def stop_game():
@@ -250,16 +287,9 @@ def stop_game():
     player.collisions.collide_with = []
 
 
-def create_menu():
-    create_background()
-    text_obj["menu"].append(
-        Background((screen_width / 2, 200), text_back)
-    )
-    text_obj["menu"].append(
-        GameText((screen_width / 2, 200), font, "Press ENTER to Start!", (200, 150, 0)))
-
-
 create_menu()
+
+pygame.mixer.music.play(-1, 0, 3)
 
 while running:
     # Setting games bg color
@@ -280,7 +310,7 @@ while running:
         if in_menu:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    start_game()
+                    score = start_game()
                     in_menu = False
                     playing = True
 
@@ -288,6 +318,10 @@ while running:
     for list in game_obj:
         for obj in game_obj[list]:
             obj.render(screen)
+
+    # Render GameText (all)
+    for txt in text_obj["all"]:
+        txt.render(screen)
 
 ####################################################################################
 
@@ -324,6 +358,12 @@ while running:
         # Update platforms to player collide list
         player.collisions.add_to_collide_with_list(game_obj["platform"])
 
+        # Destroy out of bounds
+        for platform in game_obj["platform"]:
+            if(platform.transform[0] < -10):
+                game_obj["platform"].remove(platform)
+                score.add_score(10)
+
         # DEBUG/DEVELOP MODE
         # render_hitboxes(screen)
         # display_fps(screen, clock)
@@ -331,7 +371,6 @@ while running:
 ####################################################################################
 
     if in_menu:
-
         # Render GameText (menu)
         for txt in text_obj["menu"]:
             txt.render(screen)

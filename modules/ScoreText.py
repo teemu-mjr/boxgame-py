@@ -1,7 +1,7 @@
-from modules.Text import Text
+from modules.GameText import GameText
 
 
-class ScoreText(Text):
+class ScoreText(GameText):
     def __init__(self, transform: tuple, font, text: str, color_rgb: tuple):
         super().__init__(transform, font, text, color_rgb)
         self.score = 0

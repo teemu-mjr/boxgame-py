@@ -65,9 +65,3 @@ class GameObject:
 
     def after_render(self, screen):
         pass
-
-    # def delete(self):
-    #     for list in game_obj:
-    #         if(self in game_obj[list]):
-    #             game_obj[list].remove(self)
-    #             return

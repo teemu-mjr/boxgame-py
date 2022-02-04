@@ -2,6 +2,7 @@ from modules.Animator import Animator
 from modules.Collisions import Collisions
 from modules.Platform import Platform
 from modules.Player import Player
+from modules.ScoreText import ScoreText
 
 
 class PlayerCube(Player):
@@ -10,7 +11,7 @@ class PlayerCube(Player):
         self.is_grounded = False
 
     def after_render(self, screen):
-        if(self.transform[0] < 0):
+        if(self.transform[0] < 0 and self.is_alive):
             self.die()
 
         collision_list = self.collisions.check_collisions()

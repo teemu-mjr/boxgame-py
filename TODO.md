@@ -1,5 +1,3 @@
-1.  Background repeating
-2.  Main Loop
-3.  Player death
-4.  MAIN MENU
-5.  GAME OVER MENU
+1.  Main Loop
+2.  MAIN MENU
+3.  GAME OVER MENU
