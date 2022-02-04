@@ -1,3 +1,4 @@
+from asyncio import create_task
 import pygame
 import sys
 from random import randint
@@ -219,10 +220,6 @@ def clear_screen():
     if len(text_obj["game"]) > 0:
         while len(text_obj["game"]) > 0:
             text_obj["game"].pop(0)
-    # Txt(menu)
-    if len(text_obj["menu"]) > 0:
-        while len(text_obj["menu"]) > 0:
-            text_obj["menu"].pop(0)
     # Txt(all)
     if len(text_obj["all"]) > 0:
         while len(text_obj["all"]) > 0:
@@ -267,8 +264,11 @@ def create_menu():
 
 
 def create_score_text():
+    text_obj["all"].append(
+        Background((screen_width/2, screen_height - 75), text_back))
+
     score_text = ScoreText(
-        (screen_width/2, screen_height - 50), font_54_b, "0", (20, 230, 20))
+        (screen_width/2, screen_height - 75), font_54_b, "0", (255, 255, 255))
     text_obj["all"].append(score_text)
 
     return score_text
@@ -283,7 +283,7 @@ def start_game():
 
 
 def stop_game():
-    player.velocity = (0, -5)
+    player.velocity = (player.velocity[0], -10)
     player.collisions.collide_with = []
 
 
