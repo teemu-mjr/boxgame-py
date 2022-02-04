@@ -1,4 +1,3 @@
-import pygame
 from modules.Animator import Animator
 from modules.Collisions import Collisions
 

@@ -1,4 +1,3 @@
-from asyncio import create_task
 import pygame
 import sys
 from random import randint
@@ -164,6 +163,25 @@ presets = [
         (center_pos + 250, ground_level - 50),
     ], 200
     ),
+    #       B
+    #     B B
+    #   B B B S S S
+    ObstaclePreset([
+        (center_pos, ground_level),
+        (center_pos + 50, ground_level),
+        (center_pos + 100, ground_level),
+        (center_pos, ground_level),
+        (center_pos + 50, ground_level - 50),
+        (center_pos + 100, ground_level - 50),
+        (center_pos + 100, ground_level - 100),
+
+
+    ], [
+        (center_pos + 150, ground_level),
+        (center_pos + 200, ground_level),
+        (center_pos + 150, ground_level),
+    ], 200
+    ),
 
 ]
 
@@ -285,6 +303,8 @@ def start_game():
 def stop_game():
     player.velocity = (player.velocity[0], -10)
     player.collisions.collide_with = []
+
+# Init game and start main loop
 
 
 create_menu()

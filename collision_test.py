@@ -1,18 +1,13 @@
 import pygame
 import sys
-from random import randint
 # Importing used modules from Modules folder
 from modules.Collisions import Collisions
-from modules.GameEvent import GameEvents
-from modules.GameText import GameText
 from modules.PlayerCube import PlayerCube
 from modules.Platform import Platform
-from modules.IntervalTimer import IntervalTimer
 from modules.Background import Background
 
 # DEVELOPING/TESTING
 from fps_meter import display_fps
-from modules.ScoreText import ScoreText
 
 
 # Initializing pygame
@@ -134,6 +129,7 @@ def follow_mouse(obj):
     obj.transform = pygame.mouse.get_pos()
 
 
+# Init game and start main loop
 start_game()
 
 while running:

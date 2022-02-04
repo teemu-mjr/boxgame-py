@@ -1,8 +1,6 @@
 from modules.Animator import Animator
 from modules.Collisions import Collisions
-from modules.Platform import Platform
 from modules.Player import Player
-from modules.ScoreText import ScoreText
 
 
 class PlayerCube(Player):
@@ -14,7 +12,10 @@ class PlayerCube(Player):
         if(self.transform[0] < 0 and self.is_alive):
             self.die()
 
+        # Get an array of all of the collisions and directions
         collision_list = self.collisions.check_collisions()
+
+        # Handle jumping TODO
         self.jump()
 
         # No collisions
@@ -29,12 +30,14 @@ class PlayerCube(Player):
             else:
                 self.is_grounded = False
 
+            # Colliding with a spike
             if (coll.obj.name == "Spike"):
                 self.die()
 
+            # We are grounded, so reset velocity
             if (self.is_grounded):
                 self.velocity = (self.velocity[0], 0)
 
-            # # If player is alive check if player is inside of the object
+            # If player is alive check if player is inside of the object
             if(self.is_alive):
                 self.collisions.register(coll, self)
