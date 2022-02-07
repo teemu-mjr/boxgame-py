@@ -28,13 +28,6 @@ game_obj = {
     "player": [],
 }
 
-text_obj = {
-    "all": [],
-    "menu": [],
-    "game": []
-}
-
-
 # Game sprites
 
 player_sprite = [
@@ -76,6 +69,7 @@ text_back[0].set_alpha(150)
 # Platforms
 test_platform = Platform((0, 0), platform_sprite, 0,
                          Collisions(platform_sprite))
+
 game_obj["platform"].append(test_platform)
 
 # Main loop booleans

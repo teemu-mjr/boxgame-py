@@ -1,3 +1,0 @@
-1.  Main Loop
-2.  MAIN MENU
-3.  GAME OVER MENU

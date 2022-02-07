@@ -19,6 +19,7 @@ from modules.ScoreText import ScoreText
 pygame.init()
 clock = pygame.time.Clock()
 font_24 = pygame.font.SysFont("Arial", 24)
+font_18 = pygame.font.SysFont("Arial", 18)
 font_54_b = pygame.font.SysFont("Arial", 54, True)
 
 # Screen setup
@@ -38,6 +39,7 @@ game_obj = {
 text_obj = {
     "all": [],
     "menu": [],
+    "tutorial": [],
     "game": []
 }
 
@@ -45,7 +47,7 @@ text_obj = {
 # Game sprites
 
 player_sprite = [
-    pygame.image.load("sprites/crate.png").convert_alpha()
+    pygame.image.load("sprites/crate.png").convert_alpha(),
 ]
 player_sprite[0] = pygame.transform.scale(player_sprite[0], (50, 50))
 
@@ -74,11 +76,11 @@ black_sprite = [
     pygame.image.load("sprites/blank.png").convert_alpha()
 ]
 
-text_back = [
+text_back_br = [
     pygame.image.load("sprites/blank_br.png").convert_alpha()
 ]
-text_back[0] = pygame.transform.scale(text_back[0], (300, 100))
-text_back[0].set_alpha(150)
+text_back_br[0] = pygame.transform.scale(text_back_br[0], (300, 100))
+text_back_br[0].set_alpha(150)
 
 # Sounds
 bg_music = pygame.mixer.music.load("music/bg_music.mp3")
@@ -96,15 +98,15 @@ class ObstaclePreset:
 
 
 ground_level = screen_height - 175
-center_pos = screen_width
+left_side = screen_width
 presets = [
     # S S
     ObstaclePreset([
 
     ], [
 
-        (center_pos, ground_level),
-        (center_pos + 50, ground_level),
+        (left_side, ground_level),
+        (left_side + 50, ground_level),
     ],
         100
     ),
@@ -113,12 +115,12 @@ presets = [
     #     S
     #   B B B
     ObstaclePreset([
-        (center_pos, ground_level),
-        (center_pos + 50, ground_level),
-        (center_pos + 100, ground_level),
+        (left_side, ground_level),
+        (left_side + 50, ground_level),
+        (left_side + 100, ground_level),
     ], [
 
-        (center_pos + 50, ground_level - 50),
+        (left_side + 50, ground_level - 50),
     ],
         100
     ),
@@ -128,58 +130,74 @@ presets = [
     #
     #   B S S S S S B
     ObstaclePreset([
-        (center_pos, ground_level),
-        (center_pos + 125, ground_level - 100),
-        (center_pos + 275, ground_level - 100),
-        (center_pos + 400, ground_level),
+        (left_side, ground_level),
+        (left_side + 125, ground_level - 100),
+        (left_side + 275, ground_level - 100),
+        (left_side + 400, ground_level),
     ], [
 
-        (center_pos + 50, ground_level),
-        (center_pos + 100, ground_level),
-        (center_pos + 150, ground_level),
-        (center_pos + 200, ground_level),
-        (center_pos + 250, ground_level),
-        (center_pos + 300, ground_level),
-        (center_pos + 350, ground_level),
+        (left_side + 50, ground_level),
+        (left_side + 100, ground_level),
+        (left_side + 150, ground_level),
+        (left_side + 200, ground_level),
+        (left_side + 250, ground_level),
+        (left_side + 300, ground_level),
+        (left_side + 350, ground_level),
     ], 200
     ),
 
     #     B S S B S
     #   B B B B B B
     ObstaclePreset([
-        (center_pos, ground_level),
-        (center_pos + 50, ground_level),
-        (center_pos + 100, ground_level),
-        (center_pos + 150, ground_level),
-        (center_pos + 200, ground_level),
-        (center_pos + 250, ground_level),
-        (center_pos + 50, ground_level - 50),
-        (center_pos + 200, ground_level - 50),
+        (left_side, ground_level),
+        (left_side + 50, ground_level),
+        (left_side + 100, ground_level),
+        (left_side + 150, ground_level),
+        (left_side + 200, ground_level),
+        (left_side + 250, ground_level),
+        (left_side + 50, ground_level - 50),
+        (left_side + 200, ground_level - 50),
 
     ], [
 
-        (center_pos + 100, ground_level - 50),
-        (center_pos + 150, ground_level - 50),
-        (center_pos + 250, ground_level - 50),
+        (left_side + 100, ground_level - 50),
+        (left_side + 150, ground_level - 50),
+        (left_side + 250, ground_level - 50),
     ], 200
     ),
     #       B
     #     B B
     #   B B B S S S
     ObstaclePreset([
-        (center_pos, ground_level),
-        (center_pos + 50, ground_level),
-        (center_pos + 100, ground_level),
-        (center_pos, ground_level),
-        (center_pos + 50, ground_level - 50),
-        (center_pos + 100, ground_level - 50),
-        (center_pos + 100, ground_level - 100),
+        (left_side, ground_level),
+        (left_side + 50, ground_level),
+        (left_side + 100, ground_level),
+        (left_side, ground_level),
+        (left_side + 50, ground_level - 50),
+        (left_side + 100, ground_level - 50),
+        (left_side + 100, ground_level - 100),
 
 
     ], [
-        (center_pos + 150, ground_level),
-        (center_pos + 200, ground_level),
-        (center_pos + 150, ground_level),
+        (left_side + 150, ground_level),
+        (left_side + 200, ground_level),
+        (left_side + 150, ground_level),
+    ], 200
+    ),
+    #   B         B
+    #   B S S S S B
+    ObstaclePreset([
+        (left_side, ground_level),
+        (left_side, ground_level - 50),
+        (left_side + 250, ground_level),
+        (left_side + 250, ground_level - 50),
+
+
+    ], [
+        (left_side + 50, ground_level),
+        (left_side + 100, ground_level),
+        (left_side + 150, ground_level),
+        (left_side + 200, ground_level),
     ], 200
     ),
 
@@ -210,6 +228,7 @@ obstacle_timer = IntervalTimer(0)
 running = True
 in_menu = True
 playing = False
+in_tutorial = False
 
 # Game functions
 
@@ -274,16 +293,29 @@ def create_background():
 
 def create_menu():
     create_background()
+    # Start information
     text_obj["menu"].append(
-        Background((screen_width / 2, 200), text_back))
+        Background((screen_width / 2, 200), text_back_br))
 
     text_obj["menu"].append(
-        GameText((screen_width / 2, 200), font_24, "Press ENTER to Start!", (200, 150, 0)))
+        GameText((screen_width / 2, 190), font_24, "Press ENTER to Start!", (200, 150, 0)))
+    text_obj["menu"].append(
+        GameText((screen_width / 2, 215), font_18, "Press H for help", (200, 150, 0)))
+
+    # Input information
+    text_obj["tutorial"].append(
+        Background((screen_width / 2, 300), text_back_br))
+
+    text_obj["tutorial"].append(
+        GameText((screen_width / 2, 290), font_18, "Use the arrow keys <- and -> to move.", (200, 150, 0)))
+
+    text_obj["tutorial"].append(
+        GameText((screen_width / 2, 310), font_18, "Use SPACE to jump", (200, 150, 0)))
 
 
 def create_score_text():
     text_obj["all"].append(
-        Background((screen_width/2, screen_height - 75), text_back))
+        Background((screen_width/2, screen_height - 75), text_back_br))
 
     score_text = ScoreText(
         (screen_width/2, screen_height - 75), font_54_b, "0", (255, 255, 255))
@@ -332,7 +364,15 @@ while running:
                 if event.key == pygame.K_RETURN:
                     score = start_game()
                     in_menu = False
+                    in_tutorial = False
                     playing = True
+
+                if event.key == pygame.K_h:
+                    in_tutorial = not in_tutorial
+
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
     # Rendering all gameobjects from GameObject modules list game_obj
     for list in game_obj:
@@ -347,7 +387,7 @@ while running:
 
     if playing:
         # Find player
-        player = find_object_by_name("Player")
+        player = game_obj["player"][0]
 
         # Player inputs
         keys = pygame.key.get_pressed()
@@ -361,13 +401,16 @@ while running:
         if keys[pygame.K_LEFT] and player.collisions.hitbox.left > 0:
             player.velocity = (-5, player.velocity[1])
 
+        if keys[pygame.K_ESCAPE]:
+            player.die()
+
         # Moving all platforms and spikes
         for platform in game_obj["platform"]:
             if(platform.name != "Floor"):
                 platform.move((-1, 0), 4)
 
         # Spawn obstacles
-        if(obstacle_timer.do_action(pygame.time.get_ticks())):
+        if(obstacle_timer.do_action()):
             obstacle_timer.interval = spawn_obstacle(
                 randint(0, len(presets) - 1))
 
@@ -396,6 +439,11 @@ while running:
             txt.render(screen)
 
 ####################################################################################
+
+    if in_tutorial:
+        # Render GameText (tutorial)
+        for txt in text_obj["tutorial"]:
+            txt.render(screen)
 
     # Updating whole display
     pygame.display.update()

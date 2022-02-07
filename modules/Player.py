@@ -1,4 +1,3 @@
-import pygame
 import modules.GameEvent as GameEvent
 from modules.Animator import Animator
 from modules.Collisions import Collisions
